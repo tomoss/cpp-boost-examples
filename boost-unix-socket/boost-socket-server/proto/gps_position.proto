@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package messages;
+
+message GPSPositionMessage {
+  double latitude  = 1;
+  double longitude = 2;
+  double altitude  = 3;
+}

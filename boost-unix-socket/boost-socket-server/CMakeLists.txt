@@ -5,10 +5,11 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # -------------------------------------------------------------
-# Dependencies: Boost + Protobuf
+# Dependencies: Boost + Protobuf + Abseil
 # -------------------------------------------------------------
 find_package(Boost 1.89.0 REQUIRED COMPONENTS system thread serialization)
 find_package(Protobuf REQUIRED)
+find_package(absl CONFIG REQUIRED)
 
 # -------------------------------------------------------------
 # Proto generation
@@ -23,7 +24,7 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
 add_executable(boost_socket_server
     main.cpp
     src/my_server.cpp
-    src/conn_handler.cpp
+    src/session.cpp
     ${PROTO_SRCS}
     ${PROTO_HDRS}
 )
@@ -33,8 +34,7 @@ add_executable(boost_socket_server
 # -------------------------------------------------------------
 target_include_directories(boost_socket_server PRIVATE
     inc
-    ${Boost_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}  # for generated headers
+    ${CMAKE_CURRENT_BINARY_DIR}   # for generated *.pb.h
 )
 
 # -------------------------------------------------------------
@@ -45,6 +45,22 @@ target_link_libraries(boost_socket_server
         Boost::system
         Boost::thread
         Boost::serialization
-        protobuf::libprotobuf
-        pthread
+        protobuf::libprotobuf         # correct vcpkg protobuf target
+
+        # Required for protobuf >= 27.x / 28.x / 29.x
+        absl::log
+        absl::log_internal_check_op
+        absl::log_internal_message
+        absl::base
+        absl::strings
 )
+
+# -------------------------------------------------------------
+# Testing + Packaging (optional)
+# -------------------------------------------------------------
+include(CTest)
+enable_testing()
+
+set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+include(CPack)

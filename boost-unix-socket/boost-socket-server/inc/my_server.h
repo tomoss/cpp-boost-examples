@@ -13,7 +13,7 @@ public:
     void stop();
 private:
     void startAccept();
-    void handleAccept(boost::shared_ptr<class ConnHandler> connection, const boost::system::error_code& error);
+    void handleAccept(boost::shared_ptr<class Session> connection, const boost::system::error_code& error);
     boost::thread m_thread;
     boost::asio::io_service m_ioService;
     boost::asio::local::stream_protocol::acceptor m_acceptor;

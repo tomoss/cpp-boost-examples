@@ -1,11 +1,12 @@
 #include <iostream>
 #include "my_server.h"
-#include "conn_handler.h"
+#include "session.h"
 
 static constexpr std::string_view SOCKET_PATH = "/tmp/test_server";
 
-MyServer::MyServer() : m_ioService(), m_acceptor(m_ioService, boost::asio::local::stream_protocol::endpoint(SOCKET_PATH.data()))
-{
+MyServer::MyServer() : 
+    m_ioService(),
+    m_acceptor(m_ioService, boost::asio::local::stream_protocol::endpoint(SOCKET_PATH.data())) {
     
 }
 
@@ -14,13 +15,13 @@ MyServer::~MyServer() {
 }
 
 void MyServer::startAccept() {
-    boost::shared_ptr<ConnHandler> connection = ConnHandler::create(m_ioService);
+    boost::shared_ptr<Session> connection = Session::create(m_ioService);
     m_acceptor.async_accept(connection->getSocket(),
         boost::bind(&MyServer::handleAccept, this, connection,
           boost::asio::placeholders::error));
 }
 
-void MyServer::handleAccept(boost::shared_ptr<ConnHandler> connection, const boost::system::error_code& error) {
+void MyServer::handleAccept(boost::shared_ptr<Session> connection, const boost::system::error_code& error) {
     if (!error) {
         connection->start();
     } else {

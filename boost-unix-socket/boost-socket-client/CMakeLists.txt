@@ -30,18 +30,18 @@ add_executable(boost_socket_client
 # Include directories
 # -------------------------------------------------------------
 target_include_directories(boost_socket_client PRIVATE
-    ${CMAKE_CURRENT_BINARY_DIR}   # For generated *.pb.h
+    ${Boost_INCLUDE_DIRS}
+    ${Protobuf_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 # -------------------------------------------------------------
-# Linking (Boost + Protobuf)
+# Link with Boost + Protobuf + pthread
 # -------------------------------------------------------------
 target_link_libraries(boost_socket_client
     PRIVATE
-        Boost::system
-        Boost::thread
-        Boost::serialization
-        protobuf::libprotobuf
+        ${Boost_LIBRARIES}
+        ${Protobuf_LIBRARIES}
 )
 
 # -------------------------------------------------------------

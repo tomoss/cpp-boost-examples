@@ -21,6 +21,9 @@ $VCPKG install boost-system
 $VCPKG install boost-thread
 $VCPKG install boost-serialization
 $VCPKG install boost-msm
+$VCPKG install boost-asio
+$VCPKG install boost-chrono
+$VCPKG install boost-date-time
 
 echo -e "${GREEN}=== 3. Verifying installation ===${RESET}"
 $VCPKG list | grep boost || true

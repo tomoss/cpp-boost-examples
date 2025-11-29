@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # -------------------------------------------------------------
 # Dependencies: Boost + Protobuf
 # -------------------------------------------------------------
-find_package(Boost 1.89.0 REQUIRED COMPONENTS system chrono thread)
+find_package(Boost 1.89.0 REQUIRED COMPONENTS system chrono thread date_time)
 
 # -------------------------------------------------------------
 # Executable
@@ -33,6 +33,7 @@ target_link_libraries(boost_timers
         Boost::system
         Boost::thread
         Boost::chrono
+        Boost::date_time
 )
 
 # -------------------------------------------------------------

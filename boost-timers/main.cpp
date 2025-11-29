@@ -13,24 +13,22 @@ int main() {
 
     std::cout << "Starting app..." << std::endl;
     TimerManager timerManager;
-    try {
-        uint64_t timer1 = timerManager.addTimer([]() {
-            std::cout << "Timer 1 expired!" << std::endl;
-        });
+  
+    uint64_t timer1 = timerManager.addTimer([]() {
+        std::cout << "Timer 1 expired!" << std::endl;
+    });
 
-        uint64_t timer2 = timerManager.addTimer([]() {
-            std::cout << "Timer 2 expired!" << std::endl;
-        });
+    uint64_t timer2 = timerManager.addTimer([]() {
+        std::cout << "Timer 2 expired!" << std::endl;
+    });
 
-        timerManager.startTimer(timer1, 2000); // 2 seconds
+    timerManager.startTimer(timer1, 5000); // 5 seconds
 
-        timerManager.startTimer(timer2, 10000);
+    timerManager.startTimer(timer2, 10000); // 10 seconds
 
-        timerManager.cancelTimer(timer2);
-        timerManager.removeTimer(timer2);
-    } catch (const std::exception& ex) {
-        std::cerr << "Exception: " << ex.what() << std::endl;
-    }
+    timerManager.cancelTimer(timer2);
+    timerManager.removeTimer(timer2);
+    timerManager.removeTimer(9999); // Non-existent timer
 
     while (!shutdownRequested.load()) {
             sleep(100);

@@ -50,7 +50,6 @@ void Timer::cancel() {
 Timer::~Timer() {
     try {
         m_timer.cancel();
-        std::cout << "Timer destroyed" << std::endl;
     } catch (boost::system::system_error& error) {
         std::cerr << "Failed to cancel timer in destructor: " << error.code().message() << std::endl;
     }

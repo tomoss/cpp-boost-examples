@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # -------------------------------------------------------------
 # Dependencies: Boost + Protobuf
 # -------------------------------------------------------------
-find_package(Boost 1.89.0 REQUIRED COMPONENTS system)
+find_package(Boost 1.89.0 REQUIRED COMPONENTS system msm)
 
 # -------------------------------------------------------------
 # Executable
@@ -30,6 +30,7 @@ target_include_directories(boost_state_machine PRIVATE
 target_link_libraries(boost_state_machine
     PRIVATE
         Boost::system
+        Boost::msm
 )
 
 # -------------------------------------------------------------

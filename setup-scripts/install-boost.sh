@@ -20,8 +20,9 @@ echo -e "${GREEN}=== 2. Installing Boost components ===${RESET}"
 $VCPKG install boost-system
 $VCPKG install boost-thread
 $VCPKG install boost-serialization
+$VCPKG install boost-msm
 
 echo -e "${GREEN}=== 3. Verifying installation ===${RESET}"
 $VCPKG list | grep boost || true
 
-echo -e "${GREEN}Boost (system, thread, serialization) installed successfully.${RESET}"
+echo -e "${GREEN}Boost installed successfully.${RESET}"

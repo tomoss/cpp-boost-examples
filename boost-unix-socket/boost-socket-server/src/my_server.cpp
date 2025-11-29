@@ -15,15 +15,19 @@ MyServer::~MyServer() {
 }
 
 void MyServer::startAccept() {
-    boost::shared_ptr<Session> connection = Session::create(m_ioService);
-    m_acceptor.async_accept(connection->getSocket(),
-        boost::bind(&MyServer::handleAccept, this, connection,
-          boost::asio::placeholders::error));
+    auto session = Session::create(m_ioService);
+
+    m_acceptor.async_accept(
+        session->getSocket(),
+        [this, session](const boost::system::error_code& error) {
+            handleAccept(session, error);
+        }
+    );
 }
 
-void MyServer::handleAccept(boost::shared_ptr<Session> connection, const boost::system::error_code& error) {
+void MyServer::handleAccept(std::shared_ptr<Session> session, const boost::system::error_code& error) {
     if (!error) {
-        connection->start();
+        session->start();
     } else {
         std::cerr << "Accept error: " << error.message() << std::endl;
     }
@@ -32,7 +36,9 @@ void MyServer::handleAccept(boost::shared_ptr<Session> connection, const boost::
 
 void MyServer::start() {
     startAccept();
-    m_thread = boost::thread(boost::bind(&boost::asio::io_service::run, &m_ioService));
+    m_thread = std::thread([this]() {
+        m_ioService.run();
+    });
     std::cout << "Server started, listening on " << SOCKET_PATH << std::endl;
 }
 

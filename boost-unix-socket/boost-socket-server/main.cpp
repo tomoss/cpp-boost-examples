@@ -3,6 +3,7 @@
 #include <atomic>
 #include <chrono>
 #include <boost/asio.hpp>
+#include <boost/thread.hpp>
 #include <google/protobuf/stubs/common.h>
 #include "my_server.h"
 

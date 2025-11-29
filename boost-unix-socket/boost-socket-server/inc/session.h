@@ -9,7 +9,7 @@ class Session : public boost::enable_shared_from_this<Session> {
 public:
     Session(boost::asio::io_service& ioService);
     ~Session() = default;
-    static boost::shared_ptr<Session> create(boost::asio::io_service& ioService);
+    static std::shared_ptr<Session> create(boost::asio::io_service& ioService);
     void start();
 
     void readHeader();

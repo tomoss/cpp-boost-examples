@@ -8,8 +8,8 @@ Session::Session(boost::asio::io_service& ioService) : m_socket(ioService) {
 
 }
 
-boost::shared_ptr<Session> Session::create(boost::asio::io_service& ioService) {
-    return boost::shared_ptr<Session>(new Session(ioService));
+std::shared_ptr<Session> Session::create(boost::asio::io_service& ioService) {
+    return std::shared_ptr<Session>(new Session(ioService));
 }
 
 void Session::start() {

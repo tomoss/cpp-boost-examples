@@ -15,14 +15,14 @@ VCPKG="$VCPKG_ROOT/vcpkg"
 echo -e "${GREEN}=== 1. Updating vcpkg baseline ===${RESET}"
 $VCPKG update
 
-echo -e "${GREEN}=== 2. Installing Boost 1.89.0 components ===${RESET}"
+echo -e "${GREEN}=== 2. Installing Boost components ===${RESET}"
 
 # Version-specific install syntax
-$VCPKG install boost-system@1.89.0
-$VCPKG install boost-thread@1.89.0
-$VCPKG install boost-serialization@1.89.0
+$VCPKG install boost-system
+$VCPKG install boost-thread
+$VCPKG install boost-serialization
 
 echo -e "${GREEN}=== 3. Verifying installation ===${RESET}"
 $VCPKG list | grep boost || true
 
-echo -e "${GREEN}Boost 1.89.0 (system, thread, serialization) installed successfully.${RESET}"
+echo -e "${GREEN}Boost (system, thread, serialization) installed successfully.${RESET}"

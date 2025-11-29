@@ -10,6 +10,8 @@ if [ -z "$VCPKG_ROOT" ]; then
     exit 1
 fi
 
+VCPKG="$VCPKG_ROOT/vcpkg"
+
 echo -e "${GREEN}=== 1. Updating vcpkg baseline ===${RESET}"
 $VCPKG update
 

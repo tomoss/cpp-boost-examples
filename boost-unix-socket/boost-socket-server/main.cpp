@@ -20,10 +20,20 @@ int main() {
     std::signal(SIGTERM, signalHandler);
 
     std::cout << "Starting Server app..." << std::endl;
-    MyServer server;
-    server.start();
-    while (!shutdownRequested.load()) {
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
+
+    try {
+        MyServer server;
+        server.start();
+        while (!shutdownRequested.load()) {
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(100));
+        }
+
+    } catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+        google::protobuf::ShutdownProtobufLibrary();
+        return 1;
     }
+
     google::protobuf::ShutdownProtobufLibrary();
+    return 0;
 }

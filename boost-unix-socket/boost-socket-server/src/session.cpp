@@ -13,7 +13,7 @@ Session::~Session() {
 }
 
 std::shared_ptr<Session> Session::create(boost::asio::io_service& ioService) {
-    return std::shared_ptr<Session>(new Session(ioService));
+    return std::make_shared<Session>(ioService);
 }
 
 void Session::start() {

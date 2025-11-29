@@ -8,7 +8,9 @@ static constexpr std::string_view SOCKET_PATH = "/tmp/test_server";
 
 MyServer::MyServer() : 
     m_ioService(),
-    m_acceptor(m_ioService, boost::asio::local::stream_protocol::endpoint(SOCKET_PATH.data())) {
+    m_acceptor(m_ioService, boost::asio::local::stream_protocol::endpoint(SOCKET_PATH.data()))
+{
+    
 }
 
 MyServer::~MyServer() {

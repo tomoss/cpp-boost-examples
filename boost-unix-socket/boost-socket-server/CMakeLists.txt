@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # -------------------------------------------------------------
 # Dependencies: Boost + Protobuf + Abseil
 # -------------------------------------------------------------
-find_package(Boost 1.89.0 REQUIRED COMPONENTS system thread serialization)
+find_package(Boost 1.89.0 REQUIRED COMPONENTS system thread serialization chrono date_time)
 find_package(Protobuf REQUIRED)
 find_package(absl CONFIG REQUIRED)
 
@@ -45,6 +45,8 @@ target_link_libraries(boost_socket_server
         Boost::system
         Boost::thread
         Boost::serialization
+        Boost::chrono
+        Boost::date_time
         protobuf::libprotobuf         # correct vcpkg protobuf target
 
         # Required for protobuf >= 27.x / 28.x / 29.x

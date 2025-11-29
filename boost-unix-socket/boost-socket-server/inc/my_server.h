@@ -16,6 +16,6 @@ private:
     void startAccept();
     void handleAccept(std::shared_ptr<Session> connection, const boost::system::error_code& error);
     std::thread m_thread;
-    boost::asio::io_service m_ioService;
+    boost::asio::io_context m_ioService;
     boost::asio::local::stream_protocol::acceptor m_acceptor;
 };

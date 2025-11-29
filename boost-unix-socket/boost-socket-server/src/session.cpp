@@ -4,7 +4,7 @@
 #include <iostream>
 #include <arpa/inet.h> // For ntohl
 
-Session::Session(boost::asio::io_service& ioService) : m_socket(ioService) {
+Session::Session(boost::asio::io_context& ioService) : m_socket(ioService) {
 
 }
 
@@ -12,7 +12,7 @@ Session::~Session() {
     closeSocket();
 }
 
-std::shared_ptr<Session> Session::create(boost::asio::io_service& ioService) {
+std::shared_ptr<Session> Session::create(boost::asio::io_context& ioService) {
     return std::make_shared<Session>(ioService);
 }
 

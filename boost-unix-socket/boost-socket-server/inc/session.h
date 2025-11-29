@@ -7,9 +7,9 @@
 
 class Session : public std::enable_shared_from_this<Session> {
 public:
-    Session(boost::asio::io_service& ioService);
+    Session(boost::asio::io_context& ioService);
     ~Session();
-    static std::shared_ptr<Session> create(boost::asio::io_service& ioService);
+    static std::shared_ptr<Session> create(boost::asio::io_context& ioService);
     void start();
     boost::asio::local::stream_protocol::socket& getSocket();
 private:

@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # -------------------------------------------------------------
 find_package(Boost 1.89.0 REQUIRED COMPONENTS system thread serialization)
 find_package(Protobuf REQUIRED)
+find_package(absl CONFIG REQUIRED)
 
 # -------------------------------------------------------------
 # Proto generation
@@ -30,18 +31,25 @@ add_executable(boost_socket_client
 # Include directories
 # -------------------------------------------------------------
 target_include_directories(boost_socket_client PRIVATE
-    ${Boost_INCLUDE_DIRS}
-    ${Protobuf_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}   # for generated *.pb.h
 )
 
 # -------------------------------------------------------------
-# Link with Boost + Protobuf + pthread
+# Linking
 # -------------------------------------------------------------
 target_link_libraries(boost_socket_client
     PRIVATE
-        ${Boost_LIBRARIES}
-        ${Protobuf_LIBRARIES}
+        Boost::system
+        Boost::thread
+        Boost::serialization
+        protobuf::libprotobuf         # correct vcpkg protobuf target
+
+        # Required for protobuf >= 27.x / 28.x / 29.x
+        absl::log
+        absl::log_internal_check_op
+        absl::log_internal_message
+        absl::base
+        absl::strings
 )
 
 # -------------------------------------------------------------

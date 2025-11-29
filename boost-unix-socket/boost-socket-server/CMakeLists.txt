@@ -34,26 +34,17 @@ add_executable(boost_socket_server
 target_include_directories(boost_socket_server PRIVATE
     inc
     ${Boost_INCLUDE_DIRS}
-    ${Protobuf_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}  # for generated headers
 )
 
 # -------------------------------------------------------------
-# Link with Boost + Protobuf + pthread
+# Linking
 # -------------------------------------------------------------
 target_link_libraries(boost_socket_server
     PRIVATE
-        ${Boost_LIBRARIES}
-        ${Protobuf_LIBRARIES}
+        Boost::system
+        Boost::thread
+        Boost::serialization
+        protobuf::libprotobuf
         pthread
 )
-
-# -------------------------------------------------------------
-# Testing + Packaging (optional)
-# -------------------------------------------------------------
-include(CTest)
-enable_testing()
-
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)

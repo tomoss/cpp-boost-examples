@@ -10,10 +10,6 @@ VCPKG_DIR="$HOME/vcpkg"
 PROFILE_FILE="$HOME/.bashrc"
 EXPORT_LINE='export VCPKG_ROOT="$HOME/vcpkg"'
 
-echo -e "${GREEN}=== 1. Installing prerequisites ===${RESET}"
-apt update
-apt install -y git cmake build-essential curl zip unzip tar pkg-config
-
 echo -e "${GREEN}=== 2. Cloning vcpkg if missing ===${RESET}"
 if [ -d "$VCPKG_DIR" ]; then
     echo -e "${YELLOW}vcpkg directory already exists at $VCPKG_DIR, skipping clone${RESET}"

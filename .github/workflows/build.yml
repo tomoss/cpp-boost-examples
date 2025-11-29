@@ -15,6 +15,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Install prerequisites
+      run: |
+        chmod +x setup-scripts/install-prerequisites.sh
+        ./setup-scripts/install-prerequisites.sh
+
     # ------------------------------
     # Cache vcpkg installation
     # ------------------------------

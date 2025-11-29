@@ -8,6 +8,10 @@ Session::Session(boost::asio::io_service& ioService) : m_socket(ioService) {
 
 }
 
+Session::~Session() {
+    closeSocket();
+}
+
 std::shared_ptr<Session> Session::create(boost::asio::io_service& ioService) {
     return std::shared_ptr<Session>(new Session(ioService));
 }
@@ -29,12 +33,18 @@ void Session::readHeader() {
 
 void Session::handleReadHeader(const boost::system::error_code& err, size_t bytes_transferred) {
     if (err) {
-        std::cerr << "Header read error: " << err.message() << std::endl;
+        if (err == boost::asio::error::eof) {
+            std::cout << "Client disconnected." << std::endl;
+        } else {
+            std::cerr << "Header read error: " << err.message() << std::endl;
+        }
+        closeSocket();
         return;
     }
 
     if (bytes_transferred != sizeof(m_msgLength)) {
         std::cerr << "Incomplete header read" << std::endl;
+        closeSocket();
         return;
     }
 
@@ -58,11 +68,13 @@ void Session::readBody(std::size_t length) {
 void Session::handleReadBody(const boost::system::error_code& err, size_t bytes_transferred) {
     if (err) {
         std::cerr << "Body read error: " << err.message() << std::endl;
+        closeSocket();
         return;
     }
 
     if (bytes_transferred != m_buffer.size()) {
         std::cerr << "Incomplete body read" << std::endl;
+        closeSocket();
         return;
     }
 
@@ -82,8 +94,21 @@ void Session::handleMessage(const std::vector<char>& data) {
               << " lon=" << msg.longitude()
               << " alt=" << msg.altitude()
               << std::endl;
+
+    // Continue reading more messages from this connection
+    readHeader();
 }
 
 boost::asio::local::stream_protocol::socket& Session::getSocket() {
     return m_socket;
+}
+
+void Session::closeSocket() {
+    if (m_socket.is_open()) {
+        boost::system::error_code ec;
+        m_socket.close(ec);
+        if (ec) {
+            std::cerr << "Error closing socket: " << ec.message() << std::endl;
+        }
+    }
 }

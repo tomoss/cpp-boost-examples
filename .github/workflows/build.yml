@@ -1,0 +1,77 @@
+name: Build All Projects
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # ------------------------------
+    # Cache vcpkg installation
+    # ------------------------------
+    - name: Cache vcpkg
+      uses: actions/cache@v4
+      with:
+        path: ~/vcpkg
+        key: ${{ runner.os }}-vcpkg-${{ hashFiles('setup-scripts/*.sh') }}
+        restore-keys: |
+          ${{ runner.os }}-vcpkg-
+
+    # ------------------------------
+    # Install vcpkg
+    # ------------------------------
+    - name: Install vcpkg
+      run: |
+        chmod +x setup-scripts/setup_vcpkg.sh
+        sudo ./setup-scripts/setup_vcpkg.sh
+
+    # Export env vars for current job
+    - name: Export VCPKG env vars
+      run: |
+        echo "VCPKG_ROOT=$HOME/vcpkg" >> $GITHUB_ENV
+        echo "$HOME/vcpkg" >> $GITHUB_PATH
+
+    # ------------------------------
+    # Install dependencies (protobuf + boost)
+    # ------------------------------
+    - name: Install protobuf + abseil
+      run: |
+        chmod +x setup-scripts/setup_protobuf.sh
+        ./setup-scripts/setup_protobuf.sh
+
+    - name: Install Boost components
+      run: |
+        chmod +x setup-scripts/setup_boost.sh
+        ./setup-scripts/setup_boost.sh
+
+    # ------------------------------
+    # Build every CMakeLists.txt found in the repo
+    # ------------------------------
+    - name: Build all CMake projects recursively
+      run: |
+        echo "=== Searching for CMake projects ==="
+        mapfile -t cmake_files < <(find . -name CMakeLists.txt)
+
+        for cmake_file in "${cmake_files[@]}"; do
+          project_dir="$(dirname "$cmake_file")"
+          build_dir="$project_dir/build"
+
+          echo "----------------------------------------"
+          echo "Building project: $project_dir"
+          echo "----------------------------------------"
+
+          cmake -B "$build_dir" -S "$project_dir" \
+            -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
+            -DCMAKE_BUILD_TYPE=Release
+
+          cmake --build "$build_dir" --config Release --parallel
+        done

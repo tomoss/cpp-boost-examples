@@ -15,21 +15,24 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Install prerequisites
-      run: |
-        chmod +x setup-scripts/install-prerequisites.sh
-        ./setup-scripts/install-prerequisites.sh
-
     # ------------------------------
-    # Cache vcpkg installation
+    # Cache vcpkg
     # ------------------------------
     - name: Cache vcpkg
       uses: actions/cache@v4
       with:
-        path: ~/vcpkg
+        path: ${{ env.HOME }}/vcpkg        # FIXED
         key: ${{ runner.os }}-vcpkg-${{ hashFiles('setup-scripts/*.sh') }}
         restore-keys: |
           ${{ runner.os }}-vcpkg-
+
+    # ------------------------------
+    # Install prerequisites
+    # ------------------------------
+    - name: Install prerequisites
+      run: |
+        chmod +x setup-scripts/install-prerequisites.sh
+        ./setup-scripts/install-prerequisites.sh
 
     # ------------------------------
     # Install vcpkg

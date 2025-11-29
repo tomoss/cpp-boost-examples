@@ -46,7 +46,7 @@ jobs:
     - name: Install protobuf + abseil
       run: |
         chmod +x setup-scripts/install-protobuf.sh
-        ./setup-scripts/isntall-protobuf.sh
+        ./setup-scripts/install-protobuf.sh
 
     - name: Install Boost components
       run: |

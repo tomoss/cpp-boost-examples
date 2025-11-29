@@ -31,8 +31,8 @@ jobs:
     # ------------------------------
     - name: Install vcpkg
       run: |
-        chmod +x setup-scripts/install_vcpkg.sh
-        sudo ./setup-scripts/install_vcpkg.sh
+        chmod +x setup-scripts/install-vcpkg.sh
+        sudo ./setup-scripts/install-vcpkg.sh
 
     # Export env vars for current job
     - name: Export VCPKG env vars
@@ -45,13 +45,13 @@ jobs:
     # ------------------------------
     - name: Install protobuf + abseil
       run: |
-        chmod +x setup-scripts/install_protobuf.sh
-        ./setup-scripts/isntall_protobuf.sh
+        chmod +x setup-scripts/install-protobuf.sh
+        ./setup-scripts/isntall-protobuf.sh
 
     - name: Install Boost components
       run: |
-        chmod +x setup-scripts/install_boost.sh
-        ./setup-scripts/install_boost.sh
+        chmod +x setup-scripts/install-boost.sh
+        ./setup-scripts/install-boost.sh
 
     # ------------------------------
     # Build every CMakeLists.txt found in the repo

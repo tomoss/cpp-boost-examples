@@ -6,6 +6,10 @@ if [ -z "$VCPKG_ROOT" ]; then
     exit 1
 fi
 
-"$VCPKG_ROOT/vcpkg" install protobuf --triplet x64-linux
+echo "=== Installing protobuf + abseil via vcpkg ==="
 
-echo "protobuf installed successfully."
+# Install protobuf AND abseil (required for linking protobuf 28+)
+"$VCPKG_ROOT/vcpkg" install protobuf abseil --triplet x64-linux
+
+echo "=== Done ==="
+echo "protobuf + abseil installed successfully."

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string_view>
+#include <unistd.h>     // ::unlink
 #include "my_server.h"
 #include "session.h"
 
@@ -7,7 +9,6 @@ static constexpr std::string_view SOCKET_PATH = "/tmp/test_server";
 MyServer::MyServer() : 
     m_ioService(),
     m_acceptor(m_ioService, boost::asio::local::stream_protocol::endpoint(SOCKET_PATH.data())) {
-    
 }
 
 MyServer::~MyServer() {
@@ -28,10 +29,10 @@ void MyServer::startAccept() {
 void MyServer::handleAccept(std::shared_ptr<Session> session, const boost::system::error_code& error) {
     if (!error) {
         session->start();
+        startAccept();
     } else {
         std::cerr << "Accept error: " << error.message() << std::endl;
     }
-    startAccept();
 }
 
 void MyServer::start() {

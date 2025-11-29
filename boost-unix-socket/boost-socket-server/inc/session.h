@@ -25,6 +25,5 @@ private:
     boost::asio::local::stream_protocol::socket m_socket;
     uint32_t m_msgLength = 0;
     std::vector<char> m_buffer;
-
     void closeSocket();
 };

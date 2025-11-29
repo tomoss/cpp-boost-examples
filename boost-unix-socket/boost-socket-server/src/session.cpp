@@ -55,13 +55,14 @@ void Session::handleReadHeader(const boost::system::error_code& err, size_t byte
 
 void Session::readBody(std::size_t length) {
     m_buffer.resize(length);
+    auto self = shared_from_this();
+
     boost::asio::async_read(
         m_socket,
-        boost::asio::buffer(m_buffer.data(), length),
-        boost::bind(&Session::handleReadBody,
-        shared_from_this(),
-        boost::asio::placeholders::error,
-        boost::asio::placeholders::bytes_transferred)
+        boost::asio::buffer(m_buffer.data(), m_buffer.size()),
+        [this, self](const boost::system::error_code& error, std::size_t bytes_transferred) {
+            self->handleReadBody(error, bytes_transferred);
+        }
     );
 }
     

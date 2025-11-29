@@ -32,7 +32,7 @@ jobs:
     - name: Install vcpkg
       run: |
         chmod +x setup-scripts/install-vcpkg.sh
-        sudo ./setup-scripts/install-vcpkg.sh
+        ./setup-scripts/install-vcpkg.sh
 
     # Export env vars for current job
     - name: Export VCPKG env vars

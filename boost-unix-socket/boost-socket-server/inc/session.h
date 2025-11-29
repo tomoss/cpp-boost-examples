@@ -5,7 +5,7 @@
 #include <boost/bind/bind.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
-class Session : public boost::enable_shared_from_this<Session> {
+class Session : public std::enable_shared_from_this<Session> {
 public:
     Session(boost::asio::io_service& ioService);
     ~Session();

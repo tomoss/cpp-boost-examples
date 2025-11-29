@@ -13,7 +13,7 @@ Session::~Session() {
 }
 
 std::shared_ptr<Session> Session::create(boost::asio::io_service& ioService) {
-    return std::make_shared<Session>(ioService);
+    return std::shared_ptr<Session>(new Session(ioService));
 }
 
 void Session::start() {
@@ -21,13 +21,14 @@ void Session::start() {
 }
 
 void Session::readHeader() {
+    auto self = shared_from_this();
+
     boost::asio::async_read(
         m_socket,
         boost::asio::buffer(&m_msgLength, sizeof(m_msgLength)),
-        boost::bind(&Session::handleReadHeader,
-        shared_from_this(),
-        boost::asio::placeholders::error,
-        boost::asio::placeholders::bytes_transferred)
+        [this, self](const boost::system::error_code& error, std::size_t bytes_transferred) {
+            self->handleReadHeader(error, bytes_transferred);
+        }
     );
 }
 

@@ -11,6 +11,8 @@ Before building, ensure you have the following installed:
 * **C++ Compiler** (GCC or Clang)
 * **CMake** (v3.20 or newer required for Presets)
 * **Ninja** (Recommended for build speed) or Make
+* **pkg-config** (required by some vcpkg ports)
+* **Common build utilities used by vcpkg** (git, curl, zip/unzip, tar)
 * **vcpkg**
 
 ## vcpkg Installation (Project-Local)

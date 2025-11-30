@@ -1,0 +1,16 @@
+{
+  "name": "cpp-boost-examples-workspace",
+  "version-string": "1.0.0",
+  "dependencies": [
+    "abseil",
+    "protobuf",
+    "boost-system",
+    "boost-thread",
+    "boost-serialization",
+    "boost-chrono",
+    "boost-date-time",
+    "boost-asio",
+    "boost-msm",     
+    "boost-timer"    
+  ]
+}

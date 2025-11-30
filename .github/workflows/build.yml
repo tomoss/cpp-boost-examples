@@ -1,4 +1,4 @@
-name: Build All Projects
+name: Build Monorepo (Linux)
 
 on:
   push:
@@ -10,76 +10,62 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Isolate vcpkg to the workspace (good practice for CI)
+      VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      # Tell vcpkg where to store/find binary cache
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg_cache
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
     # ------------------------------
-    # Cache vcpkg
+    # 1. Install Ninja
     # ------------------------------
-    - name: Cache vcpkg
+    # CMake Presets default to Ninja on Linux. It is faster than Make.
+    - name: Install Ninja
+      run: sudo apt-get install -y ninja-build
+
+    # ------------------------------
+    # 2. Setup Vcpkg
+    # ------------------------------
+    - name: Setup vcpkg
+      run: |
+        git clone https://github.com/Microsoft/vcpkg.git $VCPKG_ROOT
+        $VCPKG_ROOT/bootstrap-vcpkg.sh
+
+    # ------------------------------
+    # 3. Cache Binary Artifacts
+    # ------------------------------
+    # We cache the compiled libraries to speed up future builds.
+    # Note: We use a local path inside workspace for easier permission handling.
+    - name: Cache vcpkg binaries
       uses: actions/cache@v4
       with:
-        path: ~/vcpkg
-        key: ${{ runner.os }}-vcpkg-${{ hashFiles('setup-scripts/*.sh') }}
+        path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+        # The key depends on the manifest. If vcpkg.json changes, cache invalidates.
+        key: ${{ runner.os }}-vcpkg-bin-${{ hashFiles('vcpkg.json') }}
         restore-keys: |
-          ${{ runner.os }}-vcpkg-
+          ${{ runner.os }}-vcpkg-bin-
 
     # ------------------------------
-    # Install prerequisites
+    # 4. Create Cache Directory
     # ------------------------------
-    - name: Install prerequisites
-      run: |
-        chmod +x setup-scripts/install-prerequisites.sh
-        ./setup-scripts/install-prerequisites.sh
-
-    # ------------------------------
-    # Install vcpkg
-    # ------------------------------
-    - name: Install vcpkg
-      run: |
-        chmod +x setup-scripts/install-vcpkg.sh
-        ./setup-scripts/install-vcpkg.sh
-
-    # Export env vars for current job
-    - name: Export VCPKG env vars
-      run: |
-        echo "VCPKG_ROOT=$HOME/vcpkg" >> $GITHUB_ENV
-        echo "$HOME/vcpkg" >> $GITHUB_PATH
+    # Vcpkg needs this directory to exist before it tries to write to it.
+    - name: Create Cache Dir
+      run: mkdir -p $VCPKG_DEFAULT_BINARY_CACHE
 
     # ------------------------------
-    # Install dependencies (protobuf + boost)
+    # 5. Configure (The Recipe)
     # ------------------------------
-    - name: Install protobuf + abseil
-      run: |
-        chmod +x setup-scripts/install-protobuf.sh
-        ./setup-scripts/install-protobuf.sh
-
-    - name: Install Boost components
-      run: |
-        chmod +x setup-scripts/install-boost.sh
-        ./setup-scripts/install-boost.sh
+    # This reads vcpkg.json, installs dependencies, and generates build files.
+    - name: Configure via Preset
+      run: cmake --preset vcpkg-release
 
     # ------------------------------
-    # Build every CMakeLists.txt found in the repo
+    # 6. Build (The Cooking)
     # ------------------------------
-    - name: Build all CMake projects recursively
-      run: |
-        echo "=== Searching for CMake projects ==="
-        mapfile -t cmake_files < <(find . -name CMakeLists.txt)
-
-        for cmake_file in "${cmake_files[@]}"; do
-          project_dir="$(dirname "$cmake_file")"
-          build_dir="$project_dir/build"
-
-          echo "----------------------------------------"
-          echo "Building project: $project_dir"
-          echo "----------------------------------------"
-
-          cmake -B "$build_dir" -S "$project_dir" \
-            -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
-            -DCMAKE_BUILD_TYPE=Release
-
-          cmake --build "$build_dir" --config Release --parallel
-        done
+    # This builds every target defined in your root CMakeLists.txt
+    - name: Build via Preset
+      run: cmake --build --preset vcpkg-release

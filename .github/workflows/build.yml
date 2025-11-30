@@ -21,7 +21,7 @@ jobs:
     - name: Cache vcpkg
       uses: actions/cache@v4
       with:
-        path: ${{ env.HOME }}/vcpkg        # FIXED
+        path: ${{ env.HOME }}/vcpkg
         key: ${{ runner.os }}-vcpkg-${{ hashFiles('setup-scripts/*.sh') }}
         restore-keys: |
           ${{ runner.os }}-vcpkg-

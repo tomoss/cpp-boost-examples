@@ -13,12 +13,21 @@ Before building, ensure you have the following installed:
 * **Ninja** (Recommended for build speed) or Make
 * **vcpkg**
 
+### vcpkg Installation (Project-Local)
+Run the following commands from the project root:
+
+```bash
+git clone https://github.com/microsoft/vcpkg.git vcpkg
+cd vcpkg
+./bootstrap-vcpkg.sh -disableMetrics
+```
+
 ## Environment Setup
 You must define the `VCPKG_ROOT` environment variable pointing to your vcpkg installation.
 
 ```bash
-# Example (add to ~/.bashrc to make permanent)
-export VCPKG_ROOT="$HOME/vcpkg"
+export VCPKG_ROOT="$(pwd)"
+export PATH="$VCPKG_ROOT:$PATH"
 ```
 
 ## 🏗️ Build Instructions (Monorepo Workflow)

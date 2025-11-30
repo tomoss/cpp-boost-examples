@@ -30,7 +30,7 @@ export PATH="$VCPKG_ROOT:$PATH"
 
 ## 🏗️ Build Instructions (Monorepo Workflow)
 
-The commands below are executed from the root of the repository.
+The commands below are executed from the **root of the repository**.
 
 ### 1. Configure Workspace (Run Once)
 

@@ -12,7 +12,7 @@ int main() {
 
     std::cout << "Starting client app..." << std::endl;
 
-    boost::asio::io_service ioService;
+    boost::asio::io_context ioService;
     boost::asio::local::stream_protocol::socket socket(ioService);
     boost::asio::local::stream_protocol::endpoint endpoint(SOCKET_PATH.data());
     socket.connect(endpoint);

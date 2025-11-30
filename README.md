@@ -13,7 +13,7 @@ Before building, ensure you have the following installed:
 * **Ninja** (Recommended for build speed) or Make
 * **vcpkg**
 
-### vcpkg Installation (Project-Local)
+## vcpkg Installation (Project-Local)
 Run the following commands from the project root:
 
 ```bash
@@ -22,9 +22,7 @@ cd vcpkg
 ./bootstrap-vcpkg.sh -disableMetrics
 ```
 
-## Environment Setup
-You must define the `VCPKG_ROOT` environment variable pointing to your vcpkg installation.
-
+Then set the environment variables:
 ```bash
 export VCPKG_ROOT="$(pwd)"
 export PATH="$VCPKG_ROOT:$PATH"

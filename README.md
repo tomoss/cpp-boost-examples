@@ -19,6 +19,7 @@ You must define the `VCPKG_ROOT` environment variable pointing to your vcpkg ins
 ```bash
 # Example (add to ~/.bashrc to make permanent)
 export VCPKG_ROOT="$HOME/vcpkg"
+```
 
 ## 🏗️ Build Instructions (Monorepo Workflow)
 
@@ -30,6 +31,7 @@ This step reads `vcpkg.json`, downloads and compiles dependencies (Boost, Protob
 
 ```bash
 cmake --preset vcpkg-debug
+```
 
 ### 2. Build Commands
 
@@ -37,14 +39,16 @@ cmake --preset vcpkg-debug
 
 ```bash
 cmake --build --preset vcpkg-debug
+```
 
 #### Build Specific Project
 
 ```bash
 cmake --build --preset vcpkg-debug --target <target_name>
+```
 
 #### Build Release
 
 ```bash
 cmake --build --preset vcpkg-release
-
+```
